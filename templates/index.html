@@ -3,53 +3,77 @@
 <head>
   <title>Holden's cool ass fucking thing</title>
   <style>
-    body {
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
       font-family: Arial;
-      padding: 20px;
       background-image: url("/static/bg1.jpg");
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
+      background-attachment: fixed;
       color: black;
     }
+
+    .container {
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.85);
+      min-height: 100%;
+    }
+
     textarea {
       width: 100%;
       height: 100px;
       resize: none;
     }
+
     #response, #image {
       margin-top: 20px;
     }
+
+    #image img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: auto;
+      border-radius: 10px;
+    }
+
     #loading {
       display: none;
       font-weight: bold;
       color: #222;
     }
+
     .bg-buttons {
       margin-top: 30px;
     }
+
     .bg-buttons button {
       margin-right: 10px;
     }
   </style>
 </head>
 <body>
-  <h2>Whatchu want my boy</h2>
+  <div class="container">
+    <h2>Whatchu want my boy</h2>
 
-  <textarea id="prompt" placeholder="Type some words like a good boy..."></textarea>
-  <br>
-  <button onclick="sendChat()">Chat</button>
-  <button onclick="generateImage()">Generate Image</button>
+    <textarea id="prompt" placeholder="Type some words like a good boy..."></textarea>
+    <br>
+    <button onclick="sendChat()">Chat</button>
+    <button onclick="generateImage()">Generate Image</button>
 
-  <div id="loading">Loading...</div>
-  <div id="response"></div>
-  <div id="image"></div>
+    <div id="loading">Loading...</div>
+    <div id="response"></div>
+    <div id="image"></div>
 
-  <div class="bg-buttons">
-    <button onclick="setBackground('bg1.jpg')">Galaxy</button>
-    <button onclick="setBackground('bg2.jpg')">Sigma</button>
-    <button onclick="setBackground('bg3.jpg')">Dog</button>
-    <button onclick="setBackground('bg4.jpg')">Sherm</button>
+    <div class="bg-buttons">
+      <button onclick="setBackground('bg1.jpg')">Galaxy</button>
+      <button onclick="setBackground('bg2.jpg')">Sigma</button>
+      <button onclick="setBackground('bg3.jpg')">Dog</button>
+      <button onclick="setBackground('bg4.jpg')">Sherm</button>
+    </div>
   </div>
 
   <script>
@@ -85,7 +109,7 @@
       const data = await res.json();
       showLoading(false);
       if (data.url) {
-        document.getElementById("image").innerHTML = `<img src="${data.url}" width="300">`;
+        document.getElementById("image").innerHTML = `<img src="${data.url}" alt="Generated Image">`;
       } else {
         document.getElementById("image").innerText = data.error;
       }
