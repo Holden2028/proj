@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Holden's cool ass fucking thing</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background-image: url("/static/bg1.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      color: black;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      resize: none;
+    }
+    #response, #image {
+      margin-top: 20px;
+    }
+    #loading {
+      display: none;
+      font-weight: bold;
+      color: #222;
+    }
+    .bg-buttons {
+      margin-top: 30px;
+    }
+    .bg-buttons button {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Whatchu want my boy</h2>
+
+  <textarea id="prompt" placeholder="Type some words like a good boy..."></textarea>
+  <br>
+  <button onclick="sendChat()">Chat</button>
+  <button onclick="generateImage()">Generate Image</button>
+
+  <div id="loading">Loading...</div>
+  <div id="response"></div>
+  <div id="image"></div>
+
+  <div class="bg-buttons">
+    <button onclick="setBackground('bg1.jpg')">Galaxy</button>
+    <button onclick="setBackground('bg2.jpg')">Sigma</button>
+    <button onclick="setBackground('bg3.jpg')">Dog</button>
+    <button onclick="setBackground('bg4.jpg')">Sherm</button>
+  </div>
+
+  <script>
+    function setBackground(image) {
+      document.body.style.backgroundImage = `url('/static/${image}')`;
+    }
+
+    function showLoading(state) {
+      document.getElementById("loading").style.display = state ? "block" : "none";
+    }
+
+    async function sendChat() {
+      const prompt = document.getElementById("prompt").value;
+      showLoading(true);
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+      const data = await res.json();
+      showLoading(false);
+      document.getElementById("response").innerText = "AI: " + (data.response || data.error);
+    }
+
+    async function generateImage() {
+      const prompt = document.getElementById("prompt").value;
+      showLoading(true);
+      const res = await fetch("/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+      const data = await res.json();
+      showLoading(false);
+      if (data.url) {
+        document.getElementById("image").innerHTML = `<img src="${data.url}" width="300">`;
+      } else {
+        document.getElementById("image").innerText = data.error;
+      }
+    }
+  </script>
+</body>
+</html>
